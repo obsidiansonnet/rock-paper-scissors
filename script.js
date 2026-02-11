@@ -85,8 +85,19 @@ function playGame() {
     playRound(getHumanChoice(), getComputerChoice());
     playRound(getHumanChoice(), getComputerChoice());
 
-    let finalResult = humanScore > computerScore ? `Your total score is ${humanScore}, and computer's total score is ${computerScore}. You win!` :
-        `Computer's total score is ${computerScore}, and your total score is ${humanScore}. Sorry! Computer wins.`;
+    let finalResult;
+
+    if (humanScore > computerScore) {
+        finalResult = `Your total score is ${humanScore}, and computer's total score is ${computerScore}. You win!`;
+    }
+
+    else if (humanScore === computerScore) {
+        finalResult = `Your total score and computer's total score is equal, ${humanScore}. Therefore, its a draw.`;
+    }
+
+    else {
+        finalResult = `Computer's total score is ${computerScore}, and your total score is ${humanScore}. Sorry! Computer wins.`;
+    }
 
     console.log(finalResult);
 
