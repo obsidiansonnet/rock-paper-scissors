@@ -1,10 +1,21 @@
-// Function for getting computer's choice
+let humanScore = 0;
+let computerScore = 0;
+let message = "";
+let finalResult = "";
+
+const scoreHuman = document.querySelector(".humanScore");
+const scoreComputer = document.querySelector(".computerScore");
+const choiceMessageText = document.querySelector(".choicesMessage");
+const finalResultText = document.querySelector(".finalResult");
+const restartText = document.querySelector(".restart");
+const humanChoicesButtons = document.querySelector(".weapons");
+const restartButton = document.querySelector(".restartBtn");
 
 function getComputerChoice() {
     let computerChoice;
     let randValue = Math.floor(Math.random() * 100) + 1;
     switch (true) {
-        case (randValue >= 0 && randValue <= 20):
+        case (randValue > 0 && randValue <= 20):
         case (randValue >= 61 && randValue <= 74):
             computerChoice = "Rock";
             break;
@@ -20,73 +31,33 @@ function getComputerChoice() {
     return computerChoice;
 }
 
-
-// Function for getting human's choice through the use of prompt. 
-
-function getHumanChoice() {
-    let rawInput = prompt("Please input one of the three - Rock, Paper, or Scissors").trim().toLowerCase();
-    let humanChoice = rawInput.at(0).toUpperCase() + rawInput.slice(1);
-    let randValueHuman = Math.floor(Math.random() * 100) + 1;
-    if (humanChoice != "Rock" && humanChoice != "Paper" && humanChoice != "Scissors") {
-        switch (true) {
-            case (randValueHuman >= 0 && randValueHuman <= 20):
-            case (randValueHuman >= 61 && randValueHuman <= 74):
-                humanChoice = "Paper";
-                break;
-            case (randValueHuman >= 21 && randValueHuman <= 40):
-            case (randValueHuman >= 41 && randValueHuman <= 60):
-                humanChoice = "Rock";
-                break;
-            case (randValueHuman >= 75 && randValueHuman <= 87):
-            case (randValueHuman >= 88 && randValueHuman <= 100):
-                humanChoice = "Scissors";
-                break;
-        }
+function playRound(humanChoice, computerChoice) {
+    switch (true) {
+        case (humanChoice === "Rock" && computerChoice === "Rock"):
+        case (humanChoice === "Paper" && computerChoice === "Paper"):
+        case (humanChoice === "Scissors" && computerChoice === "Scissors"):
+            message = `Your choice is ${humanChoice}. Computer's choice is ${computerChoice}. Its a draw. Both, you and the computer, chose ${humanChoice}!`;
+            humanScore += 0.5;
+            computerScore += 0.5;
+            break;
+        case (humanChoice === "Rock" && computerChoice === "Scissors"):
+        case (humanChoice === "Scissors" && computerChoice === "Paper"):
+        case (humanChoice === "Paper" && computerChoice === "Rock"):
+            message = `Your choice is ${humanChoice}. Computer's choice is ${computerChoice}. You win. ${humanChoice} beats ${computerChoice}!`;
+            humanScore++;
+            break;
+        default:
+            message = `Your choice is ${humanChoice}. Computer's choice is ${computerChoice}. Sorry! Computer wins, as ${computerChoice} beats ${humanChoice}!`;
+            computerScore++;
     }
-    return humanChoice;
+    console.log(`Your choice is ${humanChoice}.`);
+    console.log(`Computer's choice is ${computerChoice}.`);
+    console.log(`Computer's score is ${computerScore}.`);
+    console.log(`Your score is ${humanScore}.`);
 }
 
-// Function to play a full game of five rounds.      
 
-
-function playGame() {
-
-    let humanScore = 0;
-    let computerScore = 0;
-
-    function playRound(humanChoice, computerChoice) {
-        switch (true) {
-            case (humanChoice === "Rock" && computerChoice === "Rock"):
-            case (humanChoice === "Paper" && computerChoice === "Paper"):
-            case (humanChoice === "Scissors" && computerChoice === "Scissors"):
-                message = `Its a draw. Both you and the computer chose ${humanChoice}!`;
-                break;
-            case (humanChoice === "Rock" && computerChoice === "Scissors"):
-            case (humanChoice === "Scissors" && computerChoice === "Paper"):
-            case (humanChoice === "Paper" && computerChoice === "Rock"):
-                message = `You win. ${humanChoice} beats ${computerChoice}!`;
-                humanScore++;
-                break;
-            default:
-                message = `Sorry! Computer wins, as ${computerChoice} beats ${humanChoice}!`;
-                computerScore++;
-        }
-        console.log(`Your choice is ${humanChoice}.`);
-        console.log(`Computer's choice is ${computerChoice}.`);
-        console.log(message);
-        console.log(`Computer's score is ${computerScore}.`);
-        console.log(`Your score is ${humanScore}.`);
-        return message;
-    }
-
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-    playRound(getHumanChoice(), getComputerChoice());
-
-    let finalResult;
-
+function scoreCalculator() {
     if (humanScore > computerScore) {
         finalResult = `Your total score is ${humanScore}, and computer's total score is ${computerScore}. You win!`;
     }
@@ -104,4 +75,40 @@ function playGame() {
     return finalResult;
 }
 
-playGame();
+humanChoicesButtons.addEventListener("click", function (event) {
+    if (event.target.tagName === "BUTTON") {
+        if (humanScore >= 5 || computerScore >= 5) {
+            restartText.textContent = "Please press Restart to start over. Thanks!"
+        }
+
+        else {
+            playRound(event.target.textContent, getComputerChoice());
+            choiceMessageText.textContent = message;
+            scoreHuman.textContent = humanScore;
+            scoreComputer.textContent = computerScore;
+
+            if (humanScore >= 5 || computerScore >= 5) {
+                scoreCalculator();
+                finalResultText.textContent = finalResult;
+            }
+        }
+    }
+})
+
+restartButton.addEventListener("click", function (event) {
+    humanScore = 0;
+    computerScore = 0;
+    message = "";
+    finalResult = "";
+
+    choiceMessageText.textContent = message;
+    scoreHuman.textContent = humanScore;
+    scoreComputer.textContent = computerScore;
+    finalResultText.textContent = finalResult;
+    restartText.textContent = ""
+})
+
+
+
+
+
